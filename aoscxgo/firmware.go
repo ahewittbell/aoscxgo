@@ -87,7 +87,7 @@ func (f *Firmware) Update(c *Client, firmware_location string, image string) err
 	firmwareBody := &bytes.Buffer{}
 	writer := multipart.NewWriter(firmwareBody)
 
-	fileField, err := writer.CreateFormFile("file", firmware_location)
+	fileField, err := writer.CreateFormFile("fileupload", firmware_location)
 	if err != nil {
 		f.materialized = false
 		return err
@@ -106,6 +106,7 @@ func (f *Firmware) Update(c *Client, firmware_location string, image string) err
 	req.Close = false
 	client := &http.Client{Transport: c.Transport}
 	req.AddCookie(c.Cookie)
+	println("Sending POST request")
 	res, err := client.Do(req)
 	//Handle Error
 	if err != nil {
