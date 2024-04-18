@@ -104,7 +104,7 @@ func (f *Firmware) Update(c *Client, firmware_location string, image string) err
 	req.Header.Set("accept", "*/*")
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	req.Close = false
-	client := &http.Client{}
+	client := &http.Client{Transport: c.Transport}
 	req.AddCookie(c.Cookie)
 	res, err := client.Do(req)
 	//Handle Error
