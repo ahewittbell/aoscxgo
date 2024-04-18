@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"time"
 )
@@ -98,7 +100,19 @@ func (f *Firmware) Update(c *Client, firmware_location string, image string) err
 
 	writer.Close()
 
-	res := post(c.Transport, c.Cookie, url, firmwareBody)
+	req, _ := http.NewRequest("POST", url, firmwareBody)
+	req.Header.Set("accept", "*/*")
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Close = false
+	client := &http.Client{}
+	req.AddCookie(c.Cookie)
+	res, err := client.Do(req)
+	//Handle Error
+	if err != nil {
+		log.Fatalf("An Error Occured %v %v", err, res.Status)
+		//os.Exit(1)
+	}
+	defer res.Body.Close()
 	if res.Status != "201 OK" {
 		f.materialized = false
 		return &RequestError{
