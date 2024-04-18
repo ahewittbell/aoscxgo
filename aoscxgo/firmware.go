@@ -1,7 +1,12 @@
 package aoscxgo
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
 )
 
 type Firmware struct {
@@ -53,5 +58,49 @@ func (f *Firmware) Get(c *Client) error {
 			}
 		}
 	}
+	f.materialized = true
+	return nil
+}
+
+func (f *Firmware) Update(c *Client, firmware_location string) error {
+
+	base_uri := "firmware"
+
+	url := "https://" + c.Hostname + "/rest/" + c.Version + "/" + base_uri
+
+	file, err := os.Open(firmware_location)
+	if err != nil {
+		f.materialized = false
+		return err
+	}
+	defer file.Close()
+
+	firmwareBody := &bytes.Buffer{}
+	writer := multipart.NewWriter(firmwareBody)
+
+	fileField, err := writer.CreateFormFile("file", firmware_location)
+	if err != nil {
+		f.materialized = false
+		return err
+	}
+
+	_, err = io.Copy(fileField, file)
+	if err != nil {
+		return err
+	}
+
+	writer.Close()
+
+	res := post(c.Transport, c.Cookie, url, firmwareBody)
+	if res.Status != "201 OK" {
+		f.materialized = false
+		return &RequestError{
+			StatusCode: res.Status,
+			Err:        errors.New("retrieval error"),
+		}
+	}
+
+	fmt.Println("firmware updated: ", res.Status)
+
 	return nil
 }
