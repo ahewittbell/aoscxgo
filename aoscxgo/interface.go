@@ -15,7 +15,7 @@ type Interface struct {
 	Description      string                 `json:"description"`
 	AdminState       string                 `json:"admin"`
 	InterfaceDetails map[string]interface{} `json:"details"`
-	materialized     bool                   `json:"materialized"`
+	materialized     bool
 }
 
 // checkName validates if interface Name is valid or not
@@ -177,7 +177,7 @@ func (i *Interface) Get(c *Client) error {
 		i.materialized = false
 		return &RequestError{
 			StatusCode: res.Status,
-			Err:        errors.New("Retrieval Error"),
+			Err:        errors.New("retrieval error"),
 		}
 	}
 

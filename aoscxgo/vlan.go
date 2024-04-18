@@ -15,8 +15,8 @@ type Vlan struct {
 	Description  string                 `json:"description"`
 	AdminState   string                 `json:"admin_state"`
 	VlanDetails  map[string]interface{} `json:"details"`
-	materialized bool                   `json:"materialized"`
-	uri          string                 `json:"uri"`
+	materialized bool
+	uri          string
 }
 
 // Create performs POST to create VLAN configuration on the given Client object.
@@ -132,7 +132,7 @@ func (v *Vlan) Get(c *Client) error {
 		v.materialized = false
 		return &RequestError{
 			StatusCode: res.Status,
-			Err:        errors.New("Retrieval Error"),
+			Err:        errors.New("retrieval error"),
 		}
 	}
 

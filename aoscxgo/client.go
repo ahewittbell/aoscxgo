@@ -67,6 +67,8 @@ func login(http_transport *http.Transport, ip string, rest_version string, usern
 }
 
 // logout performs POST to logout using a cookie from the given URL.
+//
+//lint:ignore U1000 Ignore unsed function
 func logout(http_transport *http.Transport, cookie *http.Cookie, url string) *http.Response {
 	req, _ := http.NewRequest("POST", url, nil)
 	req.Header.Set("accept", "*/*")

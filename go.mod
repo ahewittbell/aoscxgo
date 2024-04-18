@@ -1,3 +1,3 @@
-module github.com/aruba/aoscxgo
+module github.com/ahewittbell/aoscxgo
 
-go 1.17
+go 1.22

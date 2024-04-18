@@ -17,7 +17,7 @@ type RequestError struct {
 
 // A custom error string
 func (r *RequestError) Error() string {
-	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Err)
+	return fmt.Sprintf("status %s: err %v", r.StatusCode, r.Err)
 }
 
 // delete performs DELETE to the given URL and returns the response.
@@ -48,7 +48,7 @@ func get(http_transport *http.Transport, cookie *http.Cookie, url string) (*http
 	}
 
 	body := make(map[string]interface{})
-	err = json.NewDecoder(res.Body).Decode(&body)
+	json.NewDecoder(res.Body).Decode(&body)
 
 	return res, body
 }

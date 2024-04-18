@@ -19,7 +19,7 @@ type L2Interface struct {
 	TrunkAllowedAll  bool                   `json:"trunk_allowed_all"`
 	NativeVlanTag    bool                   `json:"native_vlan_tag"`
 	InterfaceDetails map[string]interface{} `json:"details"`
-	materialized     bool                   `json:"materialized"`
+	materialized     bool
 }
 
 // Create performs PATCH to update L2Interface configuration on the given Client object.
@@ -378,7 +378,7 @@ func (i *L2Interface) Get(c *Client) error {
 		i.materialized = false
 		return &RequestError{
 			StatusCode: res.Status,
-			Err:        errors.New("Retrieval Error"),
+			Err:        errors.New("retrieval error"),
 		}
 	}
 
@@ -411,7 +411,7 @@ func (i *L2Interface) Get(c *Client) error {
 			// "vlan_tag": {
 			// 	"42": "/rest/v10.09/system/vlans/42"
 			//   },
-			for key, _ := range value.(map[string]interface{}) {
+			for key := range value.(map[string]interface{}) {
 				vlan_int, _ := strconv.Atoi(key)
 				i.VlanTag = vlan_int
 			}
@@ -424,7 +424,7 @@ func (i *L2Interface) Get(c *Client) error {
 			// 	"42": "/rest/v10.09/system/vlans/42"
 			//   },
 			tmp_splice := []interface{}{}
-			for key, _ := range value.(map[string]interface{}) {
+			for key := range value.(map[string]interface{}) {
 				vlan_int, _ := strconv.Atoi(key)
 				tmp_splice = append(tmp_splice, vlan_int)
 
