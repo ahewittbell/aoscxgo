@@ -65,7 +65,7 @@ func (f *Firmware) Get(c *Client) error {
 
 func (f *Firmware) Update(c *Client, firmware_location string, image string) error {
 
-	c.Transport.IdleConnTimeout = 180 * time.Second
+	c.Transport.IdleConnTimeout = 600 * time.Second
 
 	base_uri := "firmware"
 
