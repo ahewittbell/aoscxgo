@@ -62,11 +62,15 @@ func (f *Firmware) Get(c *Client) error {
 	return nil
 }
 
-func (f *Firmware) Update(c *Client, firmware_location string) error {
+func (f *Firmware) Update(c *Client, firmware_location string, image string) error {
 
 	base_uri := "firmware"
 
-	url := "https://" + c.Hostname + "/rest/" + c.Version + "/" + base_uri
+	if (image != "primary") && (image != "secondary") {
+		return errors.New("invalid image name")
+	}
+
+	url := "https://" + c.Hostname + "/rest/" + c.Version + "/" + base_uri + "?image=" + image
 
 	file, err := os.Open(firmware_location)
 	if err != nil {
